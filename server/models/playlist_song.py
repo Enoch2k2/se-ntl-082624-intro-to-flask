@@ -1,7 +1,17 @@
 from config import db
+from sqlalchemy_serializer import SerializerMixin
 
-class PlaylistSong(db.Model):
+class PlaylistSong(db.Model, SerializerMixin):
   __tablename__ = "playlist_songs" # plural version of the class
+
+  serialize_rules=(
+    "-song.playlist_songs",
+    "-song.playlists",
+    "-playlist.songs",
+    "-playlist.playlist_songs",
+    "-song_id",
+    "-playlist_id"
+  )
 
   id = db.Column(db.Integer(), primary_key=True)
   playlist_id = db.Column(db.Integer(), db.ForeignKey("playlists.id"))
