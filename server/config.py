@@ -3,6 +3,7 @@ from sqlalchemy import MetaData
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_restful import Api
+from flask_cors import CORS
 
 # render_as_batch
 app = Flask(__name__)
@@ -23,3 +24,5 @@ db = SQLAlchemy(app=app, metadata=MetaData(naming_convention=naming_convention))
 migrate = Migrate(app=app, db=db)
 
 api = Api(app=app)
+
+CORS(app)
