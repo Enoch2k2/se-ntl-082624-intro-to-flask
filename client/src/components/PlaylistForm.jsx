@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
-import { baseUrl, headers } from '../Globals'
+import { headers } from '../Globals'
 import { useNavigate } from 'react-router-dom'
 
 const PlaylistForm = ({ addPlaylist }) => {
@@ -23,7 +23,7 @@ const PlaylistForm = ({ addPlaylist }) => {
       headers,
       body: JSON.stringify(values)
     }
-    const resp = await fetch(baseUrl + "/api/playlists", options)
+    const resp = await fetch("/api/playlists", options)
     const data = await resp.json()
     if(resp.status !== 201) {
       setError(data)

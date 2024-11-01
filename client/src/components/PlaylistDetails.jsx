@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { baseUrl } from '../Globals'
 
 const PlaylistDetails = () => {
   const [ playlist, setPlaylist ] = useState({})
@@ -8,7 +7,7 @@ const PlaylistDetails = () => {
   const { id } = useParams()
 
   useEffect(() => {
-    fetch(baseUrl + "/api/playlists/" + id)
+    fetch("/api/playlists/" + id)
       .then(resp => resp.json())
       .then(data => {
         setPlaylist(data)
