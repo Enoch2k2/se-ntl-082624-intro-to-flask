@@ -12,7 +12,12 @@ import os
 load_dotenv()
 
 # render_as_batch
-app = Flask(__name__)
+app = Flask(
+  __name__,
+  static_url_path='',
+  static_folder='../client/dist',
+  template_folder='../client/dist'
+)
 
 naming_convention = {
   "ix": 'ix_%(column_0_label)s',
@@ -23,7 +28,7 @@ naming_convention = {
 }
 
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URI")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
