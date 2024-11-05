@@ -62,3 +62,17 @@ class LogoutResource(Resource):
       return {"error": "Already logged out"}, 400
   
 api.add_resource(LogoutResource, "/api/logout")
+
+class UsersResource(Resource):
+  def get(self):
+    users = [user.to_dict() for user in User.query.all()]
+    return users, 200
+  
+api.add_resource(UsersResource, '/api/users')
+
+class UserResource(Resource):
+  def get(self, id):
+    user = User.query.get(id)
+    return user.to_dict(), 200
+  
+api.add_resource(UserResource, '/api/users/<int:id>')

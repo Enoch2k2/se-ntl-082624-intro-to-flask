@@ -9,9 +9,14 @@ class User(db.Model, SerializerMixin):
   username = db.Column(db.String(), unique=True)
   _password_hash = db.Column(db.String())
 
+  playlists = db.relationship("Playlist", back_populates="user")
+
   serialize_rules=(
     "-_password_hash",
+    "-playlists.user"
   )
+
+
 
   @hybrid_property
   def password_hash(self):

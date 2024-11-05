@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, session
 from config import db, api
 from models.models import Playlist
 from flask_restful import Resource
@@ -14,7 +14,7 @@ class PlaylistsResource(Resource):
     data = request.get_json()
     name = data.get("name")
     try:
-      playlist = Playlist(name=name)
+      playlist = Playlist(name=name, user_id=session["user_id"])
       db.session.add(playlist)
       db.session.commit()
       return playlist.to_dict(), 201

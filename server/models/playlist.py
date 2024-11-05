@@ -16,7 +16,9 @@ class Playlist(db.Model, SerializerMixin):
 
   id = db.Column(db.Integer(), primary_key=True)
   name = db.Column(db.String(), unique=True)
+  user_id = db.Column(db.Integer(), db.ForeignKey("users.id"))
 
+  user = db.relationship("User", back_populates="playlists")
   playlist_songs = db.relationship("PlaylistSong", back_populates="playlist", cascade="all, delete-orphan")
   songs = db.relationship("Song", secondary="playlist_songs", back_populates="playlists", overlaps="playlist_songs")
 

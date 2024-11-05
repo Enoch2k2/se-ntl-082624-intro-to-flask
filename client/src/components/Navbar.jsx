@@ -16,6 +16,7 @@ const Navbar = ({currentUser, loggedIn, logoutUser}) => {
   }
 
   const loggedInLinks = <>
+    <li><Link to="/users">View Users</Link></li>
     <li><Link to="/playlists">Playlists</Link></li>
     <li><Link to="/playlists/new">Create Playlist</Link></li>
     <li><Link to="#" onClick={handleLogout}>Logout</Link></li>
