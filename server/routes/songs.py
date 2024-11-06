@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, session
 from config import db, api
 from models.models import Song
 from flask_restful import Resource
@@ -11,6 +11,9 @@ class SongsResource(Resource):
     return songs
   
   def post(self):
+    if not session.get("user_id"):
+      return {"error": "Unauthorized"}, 401
+
     data = request.get_json()
     title = data.get("title")
     try:

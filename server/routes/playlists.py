@@ -36,6 +36,9 @@ class PlaylistResource(Resource):
   def patch(self, id):
     data = request.get_json()
     pl = Playlist.query.get(id)
+
+    if pl.user.id != session["user_id"]:
+      return {"error": "unauthorized"}, 401
     
 
     try:
@@ -44,7 +47,7 @@ class PlaylistResource(Resource):
           setattr(pl, key, data.get(key))
       db.session.add(pl)
       db.session.commit()
-      return pl.to_dict(), 201
+      return pl.to_dict(), 200
     except IntegrityError:
       return {"error": "Name must be unique"}, 422
     except ValueError as e:
@@ -52,12 +55,16 @@ class PlaylistResource(Resource):
     
   def delete(self, id):
     pl = Playlist.query.get(id)
-    if pl:
-      db.session.delete(pl)
-      db.session.commit()
-      return {}, 204
-    else:
+
+    if not pl:
       return {"error": "Playlist doesn't exist"}, 400
+    elif pl.user.id != session["user_id"]:
+      return {"error": "Unauthorized"}, 401
+
+    db.session.delete(pl)
+    db.session.commit()
+    return {}, 204
+      
 
 
 

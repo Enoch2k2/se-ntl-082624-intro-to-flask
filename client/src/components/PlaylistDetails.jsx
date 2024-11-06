@@ -1,21 +1,36 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
-const PlaylistDetails = () => {
+const PlaylistDetails = ({ currentUser, loggedIn, userLoading, deletePlaylist }) => {
   const [ playlist, setPlaylist ] = useState({})
   const [ loading, setLoading ] = useState(true)
   const { id } = useParams()
+  const navigate = useNavigate()
 
   useEffect(() => {
+    if(!userLoading && !currentUser.id) {
+      navigate("/login")
+    }
     fetch("/api/playlists/" + id)
       .then(resp => resp.json())
       .then(data => {
         setPlaylist(data)
         setLoading(false)
       })
-  }, [])
+  }, [loggedIn, currentUser])
 
-  if(loading) {
+  const handleDelete = event => {
+    event.preventDefault()
+
+    fetch('/api/playlists/' + id, {
+      method: "DELETE"
+    })
+
+    deletePlaylist(id)
+    navigate("/playlists")
+  }
+
+  if(loading || userLoading ) {
     return <h1>Loading...</h1>
   }
 
@@ -24,6 +39,9 @@ const PlaylistDetails = () => {
   return (
     <div>
       <h3>{playlist.name}</h3>
+      <p>{playlist.user.username}'s Playlist</p>
+      {playlist.user.id === currentUser.id ? <><Link to={`/playlists/${playlist.id}/edit`} style={{marginRight: "5px"}}>Edit</Link>
+      <Link to="#" onClick={handleDelete}>Delete</Link></> : null}
       <ul>
         {songs}
       </ul>

@@ -9,9 +9,13 @@ import Signup from './components/Signup'
 import Login from './components/Login'
 import Users from './components/Users'
 import UserDetails from './components/UserDetails'
+import PlaylistEditForm from './components/PlaylistEditForm'
+import SongList from './components/SongList'
+import SongForm from './components/SongForm'
 
 function App() {
   const [currentUser, setCurrentUser] = useState({})
+  const [songs, setSongs] = useState([])
   const [loggedIn, setLoggedIn] = useState(false)
   const [loading, setLoading] = useState(true)
 
@@ -27,7 +31,10 @@ function App() {
           setLoading(false)
         }
       })
-    }, [])
+    fetch('/api/songs')
+      .then(resp => resp.json())
+      .then(data => setSongs(data))
+  }, [])
     
     const loginUser = (user) => {
       setCurrentUser(user)
@@ -39,6 +46,10 @@ function App() {
     setLoggedIn(false)
   }
 
+  const addSong = song => {
+    setSongs([...songs, song])
+  }
+
   const addPlaylist = playlist => {
     // updating the user's playlist
     // add to currentUsers playlist (non destructively)
@@ -47,6 +58,34 @@ function App() {
     const updatedCurrentUser = {
       ...currentUser,
       playlists: pl
+    }
+    setCurrentUser(updatedCurrentUser)
+  }
+
+  const updatePlaylist = updatedPlaylist => {
+    // update playlists of the current user to replace the old playlist with the updatedPlaylist
+    const updatedPlaylists = currentUser.playlists.map(playlist => {
+      if(playlist.id === updatedPlaylist.id) {
+        return updatedPlaylist
+      } else {
+        return playlist
+      }
+    })
+    // update currentUser
+    const updatedCurrentUser = {
+      ...currentUser,
+      playlists: updatedPlaylists
+    }
+
+    // set currentUser state
+    setCurrentUser(updatedCurrentUser)
+  }
+
+  const deletePlaylist = (id) => {
+    const updatedPlaylists = currentUser.playlists.filter(playlist => playlist.id !== parseInt(id))
+    const updatedCurrentUser = {
+      ...currentUser,
+      playlists: updatedPlaylists
     }
     setCurrentUser(updatedCurrentUser)
   }
@@ -64,7 +103,10 @@ function App() {
         <Route path="/users/:id" element={<UserDetails />} />
         <Route path="/playlists" element={<Playlist playlists={ currentUser.playlists } loggedIn={loggedIn} loading={loading} />} />
         <Route path="/playlists/new" element={<PlaylistForm addPlaylist={ addPlaylist } />} />
-        <Route path="/playlists/:id" element={<PlaylistDetails />} />
+        <Route path="/playlists/:id/edit" element={<PlaylistEditForm currentUser={currentUser} loggedIn={loggedIn} userLoading={loading} updatePlaylist={updatePlaylist} />} />
+        <Route path="/playlists/:id" element={<PlaylistDetails currentUser={currentUser} loggedIn={loggedIn} userLoading={loading} deletePlaylist={deletePlaylist} />} />
+        <Route path="/songs" element={<SongList songs={songs} />} />
+        <Route path="/songs/new" element={<SongForm addSong={ addSong } loggedIn={loggedIn} /> } />
         <Route path="/signup" element={<Signup loginUser={loginUser} />} />
         <Route path="/login" element={<Login loginUser={loginUser} />} />
       </Routes>
