@@ -19,7 +19,7 @@ class Song(db.Model, SerializerMixin):
 
   playlist_songs = db.relationship("PlaylistSong", back_populates="song", cascade="all, delete-orphan")
   playlists = db.relationship("Playlist", secondary="playlist_songs", back_populates="songs", overlaps="playlist_songs")
-
+  
   @validates("title")
   def validate_title(self, key, title):
     if title == "":
