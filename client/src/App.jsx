@@ -12,6 +12,7 @@ import UserDetails from './components/UserDetails'
 import PlaylistEditForm from './components/PlaylistEditForm'
 import SongList from './components/SongList'
 import SongForm from './components/SongForm'
+import PlaylistSongForm from './components/PlaylistSongForm'
 
 function App() {
   const [currentUser, setCurrentUser] = useState({})
@@ -105,6 +106,7 @@ function App() {
         <Route path="/playlists/new" element={<PlaylistForm addPlaylist={ addPlaylist } />} />
         <Route path="/playlists/:id/edit" element={<PlaylistEditForm currentUser={currentUser} loggedIn={loggedIn} userLoading={loading} updatePlaylist={updatePlaylist} />} />
         <Route path="/playlists/:id" element={<PlaylistDetails currentUser={currentUser} loggedIn={loggedIn} userLoading={loading} deletePlaylist={deletePlaylist} />} />
+        <Route path="/playlists/:playlist_id/playlist_songs/new" element={<PlaylistSongForm playlists={currentUser.playlists} songs={songs} />} />
         <Route path="/songs" element={<SongList songs={songs} />} />
         <Route path="/songs/new" element={<SongForm addSong={ addSong } loggedIn={loggedIn} /> } />
         <Route path="/signup" element={<Signup loginUser={loginUser} />} />

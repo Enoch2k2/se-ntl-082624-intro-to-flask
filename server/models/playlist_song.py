@@ -16,9 +16,10 @@ class PlaylistSong(db.Model, SerializerMixin):
   id = db.Column(db.Integer(), primary_key=True)
   playlist_id = db.Column(db.Integer(), db.ForeignKey("playlists.id"))
   song_id = db.Column(db.Integer(), db.ForeignKey("songs.id"))
+  order_number = db.Column(db.Integer())
 
   song = db.relationship("Song", back_populates="playlist_songs")
   playlist = db.relationship("Playlist", back_populates="playlist_songs")
 
   def __repr__(self):
-    return f'<PlaylistSong id={self.id} playlist_id={self.playlist_id} song_id={self.song_id}>'
+    return f'<PlaylistSong id={self.id} playlist_id={self.playlist_id} song_id={self.song_id} order_number={self.order_number}>'
