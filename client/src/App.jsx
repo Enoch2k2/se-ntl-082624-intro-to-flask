@@ -14,6 +14,9 @@ import SongList from './components/SongList'
 import SongForm from './components/SongForm'
 import PlaylistSongForm from './components/PlaylistSongForm'
 
+import { Box } from '@mui/material';
+import Container from '@mui/material/Container';
+
 function App() {
   const [currentUser, setCurrentUser] = useState({})
   const [songs, setSongs] = useState([])
@@ -97,21 +100,25 @@ function App() {
 
   return (
     <Router>
-      <Navbar loggedIn={loggedIn} currentUser={currentUser} logoutUser={logoutUser} />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/users/:id" element={<UserDetails />} />
-        <Route path="/playlists" element={<Playlist playlists={ currentUser.playlists } loggedIn={loggedIn} loading={loading} />} />
-        <Route path="/playlists/new" element={<PlaylistForm addPlaylist={ addPlaylist } />} />
-        <Route path="/playlists/:id/edit" element={<PlaylistEditForm currentUser={currentUser} loggedIn={loggedIn} userLoading={loading} updatePlaylist={updatePlaylist} />} />
-        <Route path="/playlists/:id" element={<PlaylistDetails currentUser={currentUser} loggedIn={loggedIn} userLoading={loading} deletePlaylist={deletePlaylist} />} />
-        <Route path="/playlists/:playlist_id/playlist_songs/new" element={<PlaylistSongForm playlists={currentUser.playlists} songs={songs} />} />
-        <Route path="/songs" element={<SongList songs={songs} />} />
-        <Route path="/songs/new" element={<SongForm addSong={ addSong } loggedIn={loggedIn} /> } />
-        <Route path="/signup" element={<Signup loginUser={loginUser} />} />
-        <Route path="/login" element={<Login loginUser={loginUser} />} />
-      </Routes>
+      <Box sx={{ backgroundColor: 'background.default', minHeight: '100vh' }}>
+        <Navbar loggedIn={loggedIn} currentUser={currentUser} logoutUser={logoutUser} />
+        <Container maxWidth="sm">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/users/:id" element={<UserDetails />} />
+            <Route path="/playlists" element={<Playlist playlists={ currentUser.playlists } loggedIn={loggedIn} loading={loading} />} />
+            <Route path="/playlists/new" element={<PlaylistForm addPlaylist={ addPlaylist } />} />
+            <Route path="/playlists/:id/edit" element={<PlaylistEditForm currentUser={currentUser} loggedIn={loggedIn} userLoading={loading} updatePlaylist={updatePlaylist} />} />
+            <Route path="/playlists/:id" element={<PlaylistDetails currentUser={currentUser} loggedIn={loggedIn} userLoading={loading} deletePlaylist={deletePlaylist} />} />
+            <Route path="/playlists/:playlist_id/playlist_songs/new" element={<PlaylistSongForm playlists={currentUser.playlists} songs={songs} />} />
+            <Route path="/songs" element={<SongList songs={songs} />} />
+            <Route path="/songs/new" element={<SongForm addSong={ addSong } loggedIn={loggedIn} /> } />
+            <Route path="/signup" element={<Signup loginUser={loginUser} />} />
+            <Route path="/login" element={<Login loginUser={loginUser} />} />
+          </Routes>
+        </Container>
+      </Box>
     </Router>
   )
 }

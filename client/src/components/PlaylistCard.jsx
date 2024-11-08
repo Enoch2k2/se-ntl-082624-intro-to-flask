@@ -1,11 +1,28 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
+import ListItem from '@mui/material/ListItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
 
 const PlaylistCard = ({ playlist }) => {
   return (
-    <div>
-      <h3><Link to={`/playlists/${ playlist.id }`}>{playlist.name}</Link></h3>
-    </div>
+    <ListItem
+      button
+      component={RouterLink}
+      to={`/playlists/${playlist.id}`}
+      sx={{
+        transition: 'transform 0.2s',
+        '&:hover': {
+          transform: 'scale(1.05)',
+        },
+      }}
+    >
+      <ListItemIcon>
+        <PlaylistPlayIcon />
+      </ListItemIcon>
+      <ListItemText primary={playlist.name} />
+    </ListItem>
   )
 }
 

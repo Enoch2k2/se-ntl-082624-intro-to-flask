@@ -1,8 +1,13 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import Link from '@mui/material/Link'
+import Box from '@mui/material/Box'
 
-const Navbar = ({currentUser, loggedIn, logoutUser}) => {
-
+const Navbar = ({ currentUser, loggedIn, logoutUser }) => {
   const navigate = useNavigate()
 
   const handleLogout = (e) => {
@@ -15,27 +20,36 @@ const Navbar = ({currentUser, loggedIn, logoutUser}) => {
     navigate("/signup")
   }
 
-  const loggedInLinks = <>
-    <li><Link to="/users">View Users</Link></li>
-    <li><Link to="/playlists">View Playlists</Link></li>
-    <li><Link to="/playlists/new">Create Playlist</Link></li>
-    <li><Link to="/songs">View Songs</Link></li>
-    <li><Link to="/songs/new">Create Song</Link></li>
-    <li><Link to="#" onClick={handleLogout}>Logout</Link></li>
-    <li>{ currentUser.username }</li>
-  </>
+  const loggedInLinks = (
+    <>
+      <Button color="inherit" component={RouterLink} to="/users">View Users</Button>
+      <Button color="inherit" component={RouterLink} to="/playlists">View Playlists</Button>
+      <Button color="inherit" component={RouterLink} to="/playlists/new">Create Playlist</Button>
+      <Button color="inherit" component={RouterLink} to="/songs">View Songs</Button>
+      <Button color="inherit" component={RouterLink} to="/songs/new">Create Song</Button>
+      <Button color="inherit" onClick={handleLogout}>Logout</Button>
+      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        {currentUser.username}
+      </Typography>
+    </>
+  )
 
-  const loggedOutLinks = <>
-    <li><Link to="/signup">Signup</Link></li>
-    <li><Link to="/login">Login</Link></li>
-  </>
+  const loggedOutLinks = (
+    <>
+      <Button color="inherit" component={RouterLink} to="/signup">Signup</Button>
+      <Button color="inherit" component={RouterLink} to="/login">Login</Button>
+    </>
+  )
 
   return (
-    <ul>
-      <li><Link to="/">Home</Link></li>
-      
-      { loggedIn ? loggedInLinks : loggedOutLinks }
-    </ul>
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" component={RouterLink} to="/" sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}>
+          Home
+        </Typography>
+        {loggedIn ? loggedInLinks : loggedOutLinks}
+      </Toolbar>
+    </AppBar>
   )
 }
 

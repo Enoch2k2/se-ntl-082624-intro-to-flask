@@ -1,14 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { headers } from '../Globals'
 import { useNavigate } from 'react-router-dom'
+import TextField from '@mui/material/TextField'
+import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 
 const SongForm = ({ addSong, loggedIn }) => {
+  const [error, setError] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if(!loggedIn) {
+    if (!loggedIn) {
       navigate("/login")
     }
   }, [loggedIn])
@@ -18,42 +23,72 @@ const SongForm = ({ addSong, loggedIn }) => {
   }
 
   const validationSchema = yup.object({
-    title: yup.string().required()
+    title: yup.string().required('Title is required')
   })
 
-  const handleSubmit = values => {
-    fetch('/api/songs', {
+  const handleSubmit = async values => {
+    const options = {
       method: "POST",
-      headers,
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(values)
-    })
-      .then(resp => resp.json())
-      .then(data => {
-        addSong(data)
-        navigate("/songs")
-      })
+    }
+    const resp = await fetch("/api/songs", options)
+    const data = await resp.json()
+    if (resp.status !== 201) {
+      setError(data)
+    } else {
+      addSong(data)
+      navigate("/songs")
+    }
   }
 
   const formik = useFormik({
     initialValues,
     validationSchema,
     onSubmit: handleSubmit,
-    validateOnChange: false
   })
 
   return (
-    <div>
-      <h3>Create Song</h3>
+    <Box sx={{ padding: 2, maxWidth: 400, margin: '0 auto' }}>
+      <Box sx={{ 
+        border: '1px solid', 
+        borderColor: 'grey.400', 
+        borderRadius: 2, 
+        padding: 2, 
+        marginBottom: 2,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <Typography variant="h6" gutterBottom>
+          Create Song
+        </Typography>
+      </Box>
       <form onSubmit={formik.handleSubmit}>
-        <div>
-          <label htmlFor="title">Title: </label>
-          <input type="text" name="title" id="title" value={formik.values.title} onChange={formik.handleChange} />
-          <p style={{color: "red"}}>{ formik.errors.title }</p>
-        </div><br />
-
-        <input type="submit" value="Create Song" />
+        <Box sx={{ marginBottom: 2 }}>
+          <TextField
+            fullWidth
+            id="title"
+            name="title"
+            label="Title"
+            value={formik.values.title}
+            onChange={formik.handleChange}
+            error={formik.touched.title && Boolean(formik.errors.title)}
+            helperText={formik.touched.title && formik.errors.title}
+          />
+        </Box>
+        {error && (
+          <Typography color="error" sx={{ marginBottom: 2 }}>
+            {error.message}
+          </Typography>
+        )}
+        <Button color="primary" variant="contained" fullWidth type="submit">
+          Submit
+        </Button>
       </form>
-    </div>
+    </Box>
   )
 }
 
