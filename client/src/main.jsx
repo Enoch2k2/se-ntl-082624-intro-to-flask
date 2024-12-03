@@ -7,9 +7,18 @@ import { ThemeProvider } from '@mui/material/styles';
 import App from './App.jsx';
 import theme from './theme';
 import './index.css';
+import { SongsProvider } from './context/SongsContext.jsx';
+import { LoadingProvider } from './context/LoadingContext.jsx';
+import { UsersProvider } from './context/UsersContext.jsx';
 
 createRoot(document.getElementById('root')).render(
-  <ThemeProvider theme={theme}>
-    <App />
-  </ThemeProvider>
+  <LoadingProvider>
+    <UsersProvider>
+      <SongsProvider>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </SongsProvider>
+    </UsersProvider>
+  </LoadingProvider>
 );

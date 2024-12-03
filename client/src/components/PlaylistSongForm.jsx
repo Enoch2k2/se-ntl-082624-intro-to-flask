@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { headers } from '../Globals'
 import TextField from '@mui/material/TextField'
@@ -9,8 +9,14 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
+import { SongsContext } from '../context/SongsContext'
+import { UsersContext } from '../context/UsersContext'
 
-const PlaylistSongForm = ({ playlists, songs }) => {
+const PlaylistSongForm = () => {
+
+  const { songs } = useContext(SongsContext)
+  const { currentUser: { playlists } } = useContext(UsersContext)
+
   const [song_id, setSongId] = useState(songs[0].id)
   const { playlist_id } = useParams()
   const navigate = useNavigate()

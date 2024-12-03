@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import SongCard from './SongCard'
 import List from '@mui/material/List'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
+import { SongsContext } from '../context/SongsContext'
 
-const SongList = ({ songs }) => {
-
+const SongList = () => {
+  const { songs } = useContext(SongsContext)
   const songCards = songs.map(song => <SongCard key={song.id} song={song} />)
 
   return (

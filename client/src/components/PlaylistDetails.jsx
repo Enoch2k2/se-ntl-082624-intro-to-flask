@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom'
 import { headers } from '../Globals'
 import Box from '@mui/material/Box'
@@ -7,16 +7,19 @@ import Button from '@mui/material/Button'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
+import { UsersContext } from '../context/UsersContext'
 
-const PlaylistDetails = ({ currentUser, loggedIn, userLoading, deletePlaylist }) => {
+const PlaylistDetails = () => {
   const [playlist, setPlaylist] = useState({})
   const [loading, setLoading] = useState(true)
   const [draggedItem, setDraggedItem] = useState(null)
   const { id } = useParams()
   const navigate = useNavigate()
 
+  const { currentUser, loggedIn, deletePlaylist } = useContext(UsersContext)
+
   useEffect(() => {
-    if (!userLoading && !currentUser.id) {
+    if (!currentUser.id) {
       navigate("/login")
     }
     fetch("/api/playlists/" + id)
@@ -74,7 +77,7 @@ const PlaylistDetails = ({ currentUser, loggedIn, userLoading, deletePlaylist })
     })
   }
 
-  if (loading || userLoading) {
+  if (loading) {
     return <Typography variant="h4">Loading...</Typography>
   }
 

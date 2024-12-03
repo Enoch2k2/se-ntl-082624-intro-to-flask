@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
@@ -6,10 +6,13 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import { UsersContext } from '../context/UsersContext'
 
-const PlaylistForm = ({ addPlaylist }) => {
+const PlaylistForm = () => {
   const [error, setError] = useState(null)
   const navigate = useNavigate()
+
+  const { addPlaylist } = useContext(UsersContext)
 
   const initialValues = {
     name: ''

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Home from './components/Home'
@@ -16,83 +16,11 @@ import PlaylistSongForm from './components/PlaylistSongForm'
 
 import { Box } from '@mui/material';
 import Container from '@mui/material/Container';
+import { LoadingContext } from './context/LoadingContext'
 
 function App() {
-  const [currentUser, setCurrentUser] = useState({})
-  const [songs, setSongs] = useState([])
-  const [loggedIn, setLoggedIn] = useState(false)
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetch('/api/check-current-user')
-      .then(resp => {
-        if (resp.status == 200) {
-          resp.json().then(data => {
-            loginUser(data)
-            setLoading(false)
-          })
-        } else {
-          setLoading(false)
-        }
-      })
-    fetch('/api/songs')
-      .then(resp => resp.json())
-      .then(data => setSongs(data))
-  }, [])
-    
-    const loginUser = (user) => {
-      setCurrentUser(user)
-      setLoggedIn(true)
-  }
-  
-  const logoutUser = () => {
-    setCurrentUser({})
-    setLoggedIn(false)
-  }
-
-  const addSong = song => {
-    setSongs([...songs, song])
-  }
-
-  const addPlaylist = playlist => {
-    // updating the user's playlist
-    // add to currentUsers playlist (non destructively)
-    const pl = [...currentUser.playlists, playlist]
-    // update currentUser (non destructively)
-    const updatedCurrentUser = {
-      ...currentUser,
-      playlists: pl
-    }
-    setCurrentUser(updatedCurrentUser)
-  }
-
-  const updatePlaylist = updatedPlaylist => {
-    // update playlists of the current user to replace the old playlist with the updatedPlaylist
-    const updatedPlaylists = currentUser.playlists.map(playlist => {
-      if(playlist.id === updatedPlaylist.id) {
-        return updatedPlaylist
-      } else {
-        return playlist
-      }
-    })
-    // update currentUser
-    const updatedCurrentUser = {
-      ...currentUser,
-      playlists: updatedPlaylists
-    }
-
-    // set currentUser state
-    setCurrentUser(updatedCurrentUser)
-  }
-
-  const deletePlaylist = (id) => {
-    const updatedPlaylists = currentUser.playlists.filter(playlist => playlist.id !== parseInt(id))
-    const updatedCurrentUser = {
-      ...currentUser,
-      playlists: updatedPlaylists
-    }
-    setCurrentUser(updatedCurrentUser)
-  }
+  const {loading } = useContext(LoadingContext)
 
   if(loading) {
     return <h1>Loading...</h1>
@@ -101,21 +29,21 @@ function App() {
   return (
     <Router>
       <Box sx={{ backgroundColor: 'background.default', minHeight: '100vh' }}>
-        <Navbar loggedIn={loggedIn} currentUser={currentUser} logoutUser={logoutUser} />
+        <Navbar />
         <Container maxWidth="sm">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/users" element={<Users />} />
             <Route path="/users/:id" element={<UserDetails />} />
-            <Route path="/playlists" element={<Playlist playlists={ currentUser.playlists } loggedIn={loggedIn} loading={loading} />} />
-            <Route path="/playlists/new" element={<PlaylistForm addPlaylist={ addPlaylist } />} />
-            <Route path="/playlists/:id/edit" element={<PlaylistEditForm currentUser={currentUser} loggedIn={loggedIn} userLoading={loading} updatePlaylist={updatePlaylist} />} />
-            <Route path="/playlists/:id" element={<PlaylistDetails currentUser={currentUser} loggedIn={loggedIn} userLoading={loading} deletePlaylist={deletePlaylist} />} />
-            <Route path="/playlists/:playlist_id/playlist_songs/new" element={<PlaylistSongForm playlists={currentUser.playlists} songs={songs} />} />
-            <Route path="/songs" element={<SongList songs={songs} />} />
-            <Route path="/songs/new" element={<SongForm addSong={ addSong } loggedIn={loggedIn} /> } />
-            <Route path="/signup" element={<Signup loginUser={loginUser} />} />
-            <Route path="/login" element={<Login loginUser={loginUser} />} />
+            <Route path="/playlists" element={<Playlist />} />
+            <Route path="/playlists/new" element={<PlaylistForm />} />
+            <Route path="/playlists/:id/edit" element={<PlaylistEditForm />} />
+            <Route path="/playlists/:id" element={<PlaylistDetails />} />
+            <Route path="/playlists/:playlist_id/playlist_songs/new" element={<PlaylistSongForm />} />
+            <Route path="/songs" element={<SongList />} />
+            <Route path="/songs/new" element={<SongForm /> } />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </Container>
       </Box>

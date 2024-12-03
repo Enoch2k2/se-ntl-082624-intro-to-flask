@@ -1,12 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import PlaylistCard from './PlaylistCard'
 import { useNavigate } from 'react-router-dom'
 import List from '@mui/material/List'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
+import { LoadingContext } from '../context/LoadingContext'
+import { UsersContext } from '../context/UsersContext'
 
-const Playlist = ({ playlists, loggedIn, loading }) => {
+const Playlist = () => {
   const navigate = useNavigate()
+
+  const { loading } = useContext(LoadingContext)
+  const { currentUser, loggedIn } = useContext(UsersContext)
+  const playlists = currentUser.playlists
 
   useEffect(() => {
     if (!loading) {

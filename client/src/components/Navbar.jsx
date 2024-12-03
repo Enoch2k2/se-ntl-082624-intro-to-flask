@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link as RouterLink, useNavigate } from 'react-router-dom'
 import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
@@ -6,9 +6,12 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import Link from '@mui/material/Link'
 import Box from '@mui/material/Box'
+import { UsersContext } from '../context/UsersContext'
 
-const Navbar = ({ currentUser, loggedIn, logoutUser }) => {
+const Navbar = () => {
   const navigate = useNavigate()
+
+  const { currentUser, loggedIn, logoutUser } = useContext(UsersContext)
 
   const handleLogout = (e) => {
     e.preventDefault()

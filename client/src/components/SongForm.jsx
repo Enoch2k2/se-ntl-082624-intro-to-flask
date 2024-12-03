@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { headers } from '../Globals'
@@ -7,10 +7,13 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import { SongsContext } from '../context/SongsContext'
 
-const SongForm = ({ addSong, loggedIn }) => {
+const SongForm = ({ loggedIn }) => {
   const [error, setError] = useState(null)
   const navigate = useNavigate()
+
+  const { addSong } = useContext(SongsContext)
 
   useEffect(() => {
     if (!loggedIn) {

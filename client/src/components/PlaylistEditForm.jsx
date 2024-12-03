@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import * as yup from 'yup'
 import { headers } from '../Globals'
@@ -7,16 +7,19 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import { UsersContext } from '../context/UsersContext'
 
-const PlaylistEditForm = ({ currentUser, loggedIn, userLoading, updatePlaylist }) => {
+const PlaylistEditForm = () => {
   const [error, setError] = useState({})
   const [playlist, setPlaylist] = useState({})
   const [loading, setLoading] = useState(true)
   const { id } = useParams()
   const navigate = useNavigate()
 
+  const { currentUser, loggedIn, updatePlaylist } = useContext(UsersContext)
+
   useEffect(() => {
-    if (!loggedIn && !userLoading) {
+    if (!loggedIn) {
       navigate("/login")
     } else {
       fetch('/api/playlists/' + id)
@@ -30,7 +33,7 @@ const PlaylistEditForm = ({ currentUser, loggedIn, userLoading, updatePlaylist }
           }
         })
     }
-  }, [loggedIn, userLoading, currentUser, id, navigate])
+  }, [loggedIn, currentUser, id, navigate])
 
   const initialValues = {
     name: playlist.name || ''
